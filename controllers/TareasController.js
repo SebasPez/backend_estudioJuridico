@@ -19,6 +19,7 @@ exports.getDataForm = async (req, res) => {
     try {
         const { nombre, apellido, edad } = req.body; // Da
         console.log(nombre, apellido, edad)
+        res.send(nombre, apellido, edad)
     } catch (error) {
         return res.status(500).json({ error: "Error de servidor" });
     }
