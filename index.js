@@ -21,6 +21,7 @@ app.use(cookie())
     })
 
 app.use('/api', require('./routes/TareasRouter'));
+app.use('/api', require('./routes/FormRouter'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -16,7 +16,7 @@ exports.getAllTareas = async (req, res) => {
 };
 
 
-exports.getDataForm = async (req, res) => {
+exports.addForm = async (req, res) => {
     try {
         const { nombre, apellido, edad } = req.body;
       
