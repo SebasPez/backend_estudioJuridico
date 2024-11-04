@@ -1,5 +1,5 @@
 "use strict";
-const conexion = require('../database/db_estudio_juridico.js');
+const conexion = require('../database/Conexion.js');
 
 exports.addForm = (nombre, apellido, edad, res) => {
     const query = 'INSERT INTO tareas (nombre, apellido, edad) VALUES ($1, $2, $3)';
