@@ -12,3 +12,19 @@ exports.getAllTareas = () => {
         });
     });
 };
+
+
+exports.addTarea = (nombre, apellido, edad) => {
+    return new Promise((resolve, reject) => {
+        let sql = 'INSERT INTO tareas (nombre, apellido, edad) VALUES (?, ?, ?)';
+        conexion.query(sql, [nombre, apellido, edad], (err, resultados) => {
+            try {
+                if (err) return;
+                if (resultados.affectedRows > 0) return resolve(resultados);
+                return resolve(null);
+            } catch (error) {
+                return res.status(500).json({ error: "Error de conexion" });
+            }
+        });
+    });
+};
