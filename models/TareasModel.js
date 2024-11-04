@@ -1,7 +1,6 @@
 "use strict";
 const conexion = require('../database/db_estudio_juridico.js');
 
-
 exports.getAllTareas = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM tareas';
