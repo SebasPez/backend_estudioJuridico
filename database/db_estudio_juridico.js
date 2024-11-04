@@ -16,17 +16,17 @@ const conexion = new Pool({
     ssl:true
 });
 
-// Función para probar la conexión
-async function testConnection() {
-    try {
-        const res = await conexion.query('SELECT 1');
-        console.log('Conexión exitosa a la base de datos:', res.rows);
-    } catch (error) {
-        console.error('Error al conectar con la base de datos:', error);
-    }
-}
+// // Función para probar la conexión
+// async function testConnection() {
+//     try {
+//         const res = await conexion.query('SELECT 1');
+//         console.log('Conexión exitosa a la base de datos:', res.rows);
+//     } catch (error) {
+//         console.error('Error al conectar con la base de datos:', error);
+//     }
+// }
 
-// Llama a la función de prueba
-testConnection();
+// // Llama a la función de prueba
+// testConnection();
 
 module.exports = conexion;

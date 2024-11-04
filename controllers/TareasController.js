@@ -19,7 +19,8 @@ exports.getAllTareas = async (req, res) => {
 exports.getDataForm = async (req, res) => {
     try {
         const { nombre, apellido, edad } = req.body;
-        addTarea(nombre, apellido, edad)
+      
+        addTarea(nombre, apellido, edad, res)
     } catch (error) {
         return res.status(500).json({ error: "Error de servidor" });
     }

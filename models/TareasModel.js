@@ -14,17 +14,15 @@ exports.getAllTareas = () => {
 };
 
 
-exports.addTarea = (nombre, apellido, edad) => {
-    return new Promise((resolve, reject) => {
-        let sql = 'INSERT INTO tareas (nombre, apellido, edad) VALUES (?, ?, ?)';
-        conexion.query(sql, [nombre, apellido, edad], (err, resultados) => {
-            try {
-                if (err) return;
-                if (resultados.affectedRows > 0) return resolve(resultados);
-                return resolve(null);
-            } catch (error) {
-                return res.status(500).json({ error: "Error de conexion" });
-            }
-        });
+exports.addTarea = (nombre, apellido, edad, res) => { 
+    const query = 'INSERT INTO tareas (nombre, apellido, edad) VALUES ($1, $2, $3)';
+    const values = [nombre, apellido, edad];
+    conexion.query(query, values, (err, result) => {       
+        try {
+            if (err) return res.status(404).json({ error: 'Error al agregar la compra:' });
+            return res.status(201).json(`Compra agregada exitosamente!`);
+        } catch (error) {
+            return res.status(500).json({ error: "Error de conexion" });
+        }
     });
 };
