@@ -7,7 +7,7 @@ const tareas = require('../controllers/TareasController.js')
 
 
 // Ruta para obtener materia prima por nombre
-router.get('/getAllTareas', tareas.getAllTareas);
+router.get('/tareas', tareas.getAllTareas);
 
 
 module.exports = router;
