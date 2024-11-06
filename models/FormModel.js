@@ -8,8 +8,15 @@ exports.insertCliente = async (data) => {
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_cliente
   `;
     const values = [
-        data.nombre, data.cuil, data.edad, data.localidad, data.celular, data.mail,
-        data.clave_abc, data.estado_civil, data.cod_postal,
+        data.nombre,
+        data.cuil,
+        data.edad,
+        data.localidad,
+        data.celular,
+        data.mail,
+        data.clave_abc || null,
+        data.estado_civil || null,
+        data.cod_postal || null,
     ];
 
     const result = await conexion.query(query, values);
@@ -23,10 +30,23 @@ exports.insertDatosJubilatorios = async (data, id_cliente) => {
     cargos_jerarquicos, caja_otraPcia, art_pendiente, cobro_sucursal,porcentaje, simultaneidad, antiguedad, ingreso_tramite, id_cliente)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id_jubilacion
   `;
-    const values = [
-        data.tipo_jubilacion, data.serv_autonomo, data.serv_sinCargar, data.cargos_sinFigurar,
-        data.ruralidad, data.mejorCargo, data.diegep, data.cargos_jerarquicos,
-        data.caja_otraPcia, data.art_pendiente, data.cobro_sucursal, null, null, null, null, id_cliente
+    const values = [      
+        data.tipo_jubilacion,
+        data.serv_autonomo || null,
+        data.serv_sinCargar || null,
+        data.cargos_sinFigurar || null,
+        data.ruralidad || null,
+        data.mejorCargo || null,
+        data.diegep || null,
+        data.cargos_jerarquicos || null,
+        data.caja_otraPcia || null,
+        data.art_pendiente || null,
+        data.cobro_sucursal || null,
+        null,
+        null,
+        null,
+        null,
+        id_cliente
     ];
 
     const result = await conexion.query(query, values);
@@ -42,7 +62,10 @@ exports.insertDocAcompaniada = async (id_jubilacion, documental_acomp) => {
     `;
         // Realiza la inserción para cada elemento en el arreglo documental_acomp
         for (const doc of documental_acomp) {
-            const values = [id_jubilacion, doc];
+            const values = [
+                id_jubilacion,
+                doc || null  // Reemplaza valores vacíos por null
+            ];
             await conexion.query(query, values);
         }
     }

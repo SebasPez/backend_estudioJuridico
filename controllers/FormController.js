@@ -4,11 +4,10 @@ const {
 } = require('../models/FormModel.js');
 
 exports.insertarCliente = async(req, res) => {
-    const data = req.body;
+    const data = req.body;  
     try {
-        // Inserta los datos en la tabla CLIENTE y obtiene el ID
+        // Inserta los datos en la tabla CLIENTE y obtiene el ID       
         const id_cliente = await insertCliente(data);
-
         // Inserta los datos en la tabla DATOS_JUBILATORIOS y obtiene el ID
         const id_jubilacion = await insertDatosJubilatorios(data, id_cliente);
 
