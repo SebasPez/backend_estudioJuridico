@@ -1,15 +1,69 @@
 "use strict";
 const conexion = require('../database/Conexion.js');
 
-exports.addForm = (nombre, apellido, edad, res) => {
-    const query = 'INSERT INTO tareas (nombre, apellido, edad) VALUES ($1, $2, $3)';
-    const values = [nombre, apellido, edad];
-    conexion.query(query, values, (err, result) => {
-        try {
-            if (err) return res.status(404).json({ error: 'Error al agregar la compra:' });
-            return res.status(201).json(`Compra agregada exitosamente!`);
-        } catch (error) {
-            return res.status(500).json({ error: "Error de conexion" });
+// Función para insertar en la tabla CLIENTE
+exports.insertCliente = async (data) => {
+    const query = `
+    INSERT INTO CLIENTE (nombre, cuil, edad, localidad, celular, mail, clave_abc, estado_civil, cod_postal) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_cliente
+  `;
+    const values = [
+        data.nombre, data.cuil, data.edad, data.localidad, data.celular, data.mail,
+        data.clave_abc, data.estado_civil, data.cod_postal,
+    ];
+
+    const result = await conexion.query(query, values);
+    return result.rows[0].id_cliente;
+}
+
+// Función para insertar en la tabla DATOS_JUBILATORIOS
+exports.insertDatosJubilatorios = async (data, id_cliente) => {
+    const query = `
+    INSERT INTO DATOS_JUBILATORIOS (tipo_jubilacion, serv_autonomo, serv_sinCargar, cargos_sinFigurar, ruralidad, mejor_cargo, diegep, 
+    cargos_jerarquicos, caja_otraPcia, art_pendiente, cobro_sucursal,porcentaje, simultaneidad, antiguedad, ingreso_tramite, id_cliente)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id_jubilacion
+  `;
+    const values = [
+        data.tipo_jubilacion, data.serv_autonomo, data.serv_sinCargar, data.cargos_sinFigurar,
+        data.ruralidad, data.mejorCargo, data.diegep, data.cargos_jerarquicos,
+        data.caja_otraPcia, data.art_pendiente, data.cobro_sucursal, null, null, null, null, id_cliente
+    ];
+
+    const result = await conexion.query(query, values);
+    return result.rows[0].id_jubilacion;
+}
+
+// Función para insertar en la tabla DOC_ACOMPANIADA
+exports.insertDocAcompaniada = async (id_jubilacion, documental_acomp) => {
+    // Verifica si el arreglo no está vacío
+    if (documental_acomp && documental_acomp.length > 0) {
+        const query = `
+      INSERT INTO DOC_ACOMPANIADA (id_jubilacion, documental_acomp) VALUES ($1, $2)
+    `;
+        // Realiza la inserción para cada elemento en el arreglo documental_acomp
+        for (const doc of documental_acomp) {
+            const values = [id_jubilacion, doc];
+            await conexion.query(query, values);
         }
+    }
+}
+
+
+exports.getDatosJubilatorios = (id_cliente) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT 
+            c.*,
+            dj.*,
+            STRING_AGG(da.documental_acomp, ', ' ORDER BY da.documental_acomp) AS documental_acomp
+            FROM cliente c
+            JOIN datos_jubilatorios dj ON c.id_cliente = dj.id_cliente
+            LEFT JOIN doc_acompaniada da ON dj.id_jubilacion = da.id_jubilacion
+            WHERE c.id_cliente = ${id_cliente}
+            GROUP BY c.id_cliente, dj.id_jubilacion`;
+        conexion.query(sql, (err, resultados) => {
+            if (err) return reject({ status: 500, message: 'Error al obtener los datos jubilatorios' });
+            if (resultados && resultados.rows.length > 0) return resolve(resultados.rows); // Devuelve solo las filas
+            resolve([]);  // Devuelve una lista vacía si no hay tareas
+        });
     });
 };

@@ -3,11 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 //HACEMOS USO DE LOS CONTROLADORES
-const tareas = require('../controllers/TareasController.js')
-
+const cliente = require('../controllers/ClienteController.js');
 
 // Ruta para obtener materia prima por nombre
-router.get('/tareas', tareas.getAllTareas);
-
+router.get('/cliente', cliente.getAll);
 
 module.exports = router;
