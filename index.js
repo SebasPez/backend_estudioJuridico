@@ -35,8 +35,9 @@ app.options('*', cors());
 
 app.use('/api', require('./routes/FormRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
+app.use('/api', require('./routes/AnalisisRouter.js'));
 
-const PORT = process.env.PORT || 5432;
+const PORT = 3000 ||process.env.PORT;
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
