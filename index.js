@@ -16,18 +16,28 @@ app.use(cookie())
     .use(express.json())
     .use(express.urlencoded({ extended: true }));
 
-const allowAnyLocalhost = process.env.ALLOW_ANY_LOCALHOST === 'true';
+const allowedOrigins = [
+    process.env.ORIGIN1,
+    process.env.ORIGIN2,
+    process.env.ORIGIN3,
+    process.env.ORIGIN4,
+];
+
+console.log("Allowed Origins:", allowedOrigins);
+console.log("Allow Any Localhost:", process.env.ALLOW_ANY_LOCALHOST);
 
 app.use(cors({
-    origin: allowAnyLocalhost ? /^http:\/\/localhost(:\d+)?$/ : function (origin, callback) {
-        if (!origin) return callback(null, 'http://localhost');
-        return callback("Error de CORS origin: " + origin + " No autorizado");
-    },
-    credentials: true,
-    exposedHeaders: allowAnyLocalhost ? null : ['Content-Length', 'Authorization'], // Ajusta según tus necesidades
+    origin: (origin, callback) => {
+        console.log("Origin received:", origin);
+        if (process.env.ALLOW_ANY_LOCALHOST === 'true' && origin && origin.startsWith('http://localhost')) {
+            return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('No permitido por la política CORS'));
+    }
 }));
-
-app.options('*', cors());
 
 app.use('/api', require('./routes/FormRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
