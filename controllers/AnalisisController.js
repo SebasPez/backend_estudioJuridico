@@ -1,6 +1,6 @@
 "use strict";
 const {
-    get
+    get, borrar
 } = require('../models/AnalisisModel.js');
 
 exports.get = async (req, res) => {
@@ -10,6 +10,18 @@ exports.get = async (req, res) => {
         if (response && response.length > 0)
             return res.status(200).json({ response });
         return res.status(404).json({ error: "Aún no se ha realizado ningún análisis" });
+    } catch (error) {
+        return res.status(500).json({ error: "Error de servidor" });
+    }
+};
+
+exports.borrar = async (req, res) => {
+    const { id_analisis } = req.params;    
+    try {
+        let response = await borrar(id_analisis, res)
+       
+        if (response) return res.status(200).json(`Analisis borrado con éxito`);
+        else return res.status(404).json({ error: "Error: No se ha podido eliminar" })
     } catch (error) {
         return res.status(500).json({ error: "Error de servidor" });
     }
