@@ -37,7 +37,7 @@ app.use('/api', require('./routes/FormRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
 app.use('/api', require('./routes/AnalisisRouter.js'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || (process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD);
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
