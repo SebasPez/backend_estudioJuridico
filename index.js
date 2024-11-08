@@ -8,12 +8,10 @@ const cors = require('cors');
 const app = express();
 
 const path = require('path');
-//SETEAMOS VARIABLES DE ENTORNO
 dontev.config({
     path: '.env'
 })
 
-//HACEMOS USO DE LAS COOKIES
 app.use(cookie())
     .use(express.json())
     .use(express.urlencoded({ extended: true }));
@@ -23,8 +21,6 @@ const allowAnyLocalhost = process.env.ALLOW_ANY_LOCALHOST === 'true';
 app.use(cors({
     origin: allowAnyLocalhost ? /^http:\/\/localhost(:\d+)?$/ : function (origin, callback) {
         if (!origin) return callback(null, 'http://localhost');
-
-        // Agrega lógica adicional aquí si es necesario
         return callback("Error de CORS origin: " + origin + " No autorizado");
     },
     credentials: true,
