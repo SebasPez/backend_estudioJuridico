@@ -18,9 +18,9 @@ app.use(cookie())
 
 const allowedOrigins = [
     process.env.ORIGIN1,
-    process.env.ORIGIN2,
-    process.env.ORIGIN3,
-    process.env.ORIGIN4,
+    // process.env.ORIGIN2,
+    // process.env.ORIGIN3,
+    // process.env.ORIGIN4,
 ];
 
 console.log("Allowed Origins:", allowedOrigins);
