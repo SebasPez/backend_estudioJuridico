@@ -23,3 +23,17 @@ exports.borrar = (id, res) => {
         });
     });
 };
+
+exports.agregar = async (tipo_analisis, id_cliente) => {
+    const query = `
+    INSERT INTO ANALISIS (tipo_analisis, id_cliente) 
+    VALUES ($1, $2) RETURNING id_cliente
+  `;
+    const values = [
+        tipo_analisis,
+        id_cliente
+    ];
+
+    const result = await conexion.query(query, values);
+    return result.rows[0].id_cliente;
+}

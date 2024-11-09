@@ -4,7 +4,7 @@ const {
 } = require('../models/FormModel.js');
 
 exports.insertarCliente = async(req, res) => {
-    const data = req.body;  
+    const data = req.body;     
     try {
         // Inserta los datos en la tabla CLIENTE y obtiene el ID       
         const id_cliente = await insertCliente(data);

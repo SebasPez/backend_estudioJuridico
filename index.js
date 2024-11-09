@@ -16,32 +16,28 @@ app.use(cookie())
     .use(express.json())
     .use(express.urlencoded({ extended: true }));
 
-const allowedOrigins = [
-    process.env.ORIGIN1,
-    // process.env.ORIGIN2,
-    // process.env.ORIGIN3,
-    // process.env.ORIGIN4,
-];
-
-console.log("Allowed Origins:", allowedOrigins);
-console.log("Allow Any Localhost:", process.env.ALLOW_ANY_LOCALHOST);
+const allowAnyLocalhost = process.env.ALLOW_ANY_LOCALHOST === 'true';
 
 app.use(cors({
-    origin: (origin, callback) => {
-        console.log("Origin received:", origin);
-        if (process.env.ALLOW_ANY_LOCALHOST === 'true' && origin && origin.startsWith('http://localhost')) {
-            return callback(null, true);
+    origin: allowAnyLocalhost ? /^http:\/\/localhost(:\d+)?$/ : function (origin, callback) {
+        if (!origin) {
+            return callback(null, 'http://localhost');
         }
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        return callback(new Error('No permitido por la política CORS'));
-    }
+
+        // Agrega lógica adicional aquí si es necesario
+
+        return callback("Error de CORS origin: " + origin + " No autorizado");
+    },
+    credentials: true,
+    exposedHeaders: allowAnyLocalhost ? null : ['Content-Length', 'Authorization'], // Ajusta según tus necesidades
 }));
+
+app.options('*', cors());
 
 app.use('/api', require('./routes/FormRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
 app.use('/api', require('./routes/AnalisisRouter.js'));
+app.use('/api', require('./routes/MovimientoRouter.js'));
 
 const PORT = process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD;
 app.listen(PORT, () => {
