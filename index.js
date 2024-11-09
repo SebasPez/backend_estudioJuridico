@@ -16,20 +16,21 @@ app.use(cookie())
     .use(express.json())
     .use(express.urlencoded({ extended: true }));
 
-const allowAnyLocalhost = process.env.ALLOW_ANY_LOCALHOST === 'true';
 
+
+// Obtén el origen permitido desde el archivo .env
+const allowedOrigin = process.env.ORIGIN;
+
+// Configuración de CORS
 app.use(cors({
-    origin: allowAnyLocalhost ? /^http:\/\/localhost(:\d+)?$/ : function (origin, callback) {
-        if (!origin) {
-            return callback(null, 'http://localhost');
+    origin: (origin, callback) => {
+        if (origin === allowedOrigin) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS error: No autorizado'));
         }
-
-        // Agrega lógica adicional aquí si es necesario
-
-        return callback("Error de CORS origin: " + origin + " No autorizado");
     },
-    credentials: true,
-    exposedHeaders: allowAnyLocalhost ? null : ['Content-Length', 'Authorization'], // Ajusta según tus necesidades
+    credentials: true
 }));
 
 app.options('*', cors());
