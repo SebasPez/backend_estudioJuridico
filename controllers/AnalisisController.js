@@ -1,6 +1,6 @@
 "use strict";
 const {
-    get, borrar, agregar
+    get, borrar, agregar, editar
 } = require('../models/AnalisisModel.js');
 
 exports.get = async (req, res) => {
@@ -30,12 +30,28 @@ exports.borrar = async (req, res) => {
 
 exports.agregar = async (req, res) => {
     const { tipo_analisis, id_cliente } = req.body;
-    
+    let estado = "iniciado";
     try {       
-        const id = await agregar(tipo_analisis, id_cliente); 
-        res.status(200).json({ message: `Datos insertados exitosamente a la persona con id: ${id}` });
+        const id = await agregar(tipo_analisis, estado, id_cliente);
+        if (!id) return res.status(404).json({ message: "El análisis no se puedo agregar" });
+        return res.status(200).json({ message: `Datos insertados exitosamente a la persona con id: ${id}` });
     } catch (error) {
         console.error('Error al insertar datos:', error);
-        res.status(500).json({ message: 'Error al insertar datos' });
+        res.status(500).json({ message: 'Error se servidor' });
     }
 }
+
+exports.editar = async (req, res) => {
+    const { id_analisis, estado } = req.params;
+   
+    if (!id_analisis || !estado) return res.status(400).json({ message: "Faltan datos necesarios para editar el análisis" });
+    
+    try {
+        const updatedAnalisis = await editar(id_analisis, estado);
+        if (!updatedAnalisis) return res.status(404).json({ message: "El estado no se pudo cambiar" });
+        return res.status(200).json({ message: "Dato editado exitosamente", data: updatedAnalisis });
+    } catch (error) {
+        console.error("Error al editar:", error);
+        res.status(500).json({ message: "de servidor" });
+    }
+};

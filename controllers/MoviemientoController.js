@@ -28,9 +28,9 @@ exports.get = async (req, res) => {
 // };
 
 exports.agregar = async (req, res) => {
-    const { fecha_mov, descripcion, id_cliente } = req.body;  
+    const { descripcion, id_cliente } = req.body;  
     try {
-        const id = await agregar(fecha_mov, descripcion, id_cliente);
+        const id = await agregar(descripcion, id_cliente);
         res.status(200).json({ message: `Datos insertados exitosamente a la persona con id: ${id}` });
     } catch (error) {
         console.error('Error al insertar datos:', error);

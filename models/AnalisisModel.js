@@ -24,16 +24,31 @@ exports.borrar = (id, res) => {
     });
 };
 
-exports.agregar = async (tipo_analisis, id_cliente) => {
+exports.agregar = async (tipo_analisis, estado, id_cliente) => {
     const query = `
-    INSERT INTO ANALISIS (tipo_analisis, id_cliente) 
-    VALUES ($1, $2) RETURNING id_cliente
+    INSERT INTO ANALISIS (tipo_analisis, estado, id_cliente) 
+    VALUES ($1, $2, $3) RETURNING id_cliente
   `;
     const values = [
         tipo_analisis,
+        estado,
         id_cliente
     ];
 
     const result = await conexion.query(query, values);
     return result.rows[0].id_cliente;
 }
+
+
+exports.editar = async (id_analisis, estado) => {
+    const query = `
+        UPDATE ANALISIS
+        SET estado = $1
+        WHERE id_analisis = $2
+        RETURNING id_analisis, estado;
+    `;
+    const values = [estado, id_analisis];
+
+    const result = await conexion.query(query, values);
+    return result.rows[0];
+};

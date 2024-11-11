@@ -9,5 +9,6 @@ const analisis = require('../controllers/AnalisisController.js');
 router.get('/analisis/:id_cliente', analisis.get);
 router.delete('/analisis/:id_analisis', analisis.borrar);
 router.post('/analisis', analisis.agregar);
+router.put('/analisis/:id_analisis/:estado', analisis.editar);
 
 module.exports = router;

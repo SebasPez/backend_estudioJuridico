@@ -24,13 +24,12 @@ exports.get = (id_cliente) => {
 //     });
 // };
 
-exports.agregar = async (fecha_mov, descripcion, id_cliente) => {
+exports.agregar = async (descripcion, id_cliente) => {
     const query = `
     INSERT INTO MOVIMIENTO (fecha_mov, descripcion, id_cliente) 
-    VALUES (TO_DATE($1, 'YYYY-MM-DD'), $2, $3) RETURNING id_cliente
+    VALUES (CURRENT_DATE, $1, $2) RETURNING id_cliente
   `;
-    const values = [
-        fecha_mov, 
+    const values = [       
         descripcion,
         id_cliente
     ];
