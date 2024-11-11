@@ -2,10 +2,10 @@
 const conexion = require('../database/Conexion.js');
 
 // Función para insertar en la tabla CLIENTE
-exports.insertCliente = async (data) => {
+exports.insertCliente = async (data, estado) => {
     const query = `
-    INSERT INTO CLIENTE (nombre, cuil, edad, localidad, celular, mail, clave_abc, estado_civil, cod_postal) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_cliente
+    INSERT INTO CLIENTE (nombre, cuil, edad, localidad, celular, mail, clave_abc, estado_civil, cod_postal, estado) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id_cliente
   `;
     const values = [
         data.nombre,
@@ -17,6 +17,7 @@ exports.insertCliente = async (data) => {
         data.clave_abc || null,
         data.estado_civil || null,
         data.cod_postal || null,
+        estado
     ];
 
     const result = await conexion.query(query, values);

@@ -12,3 +12,17 @@ exports.getAll = () => {
     });
 };
 
+exports.editar = async (id_cliente, estado) => {
+    const query = `
+        UPDATE CLIENTE
+        SET estado = $1
+        WHERE id_cliente = $2
+        RETURNING id_cliente, estado;
+    `;
+    const values = [estado, id_cliente];
+
+    const result = await conexion.query(query, values);
+    return result.rows[0];
+};
+
+

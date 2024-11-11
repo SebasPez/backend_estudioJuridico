@@ -5,10 +5,10 @@ const {
 
 exports.insertarCliente = async(req, res) => {
     const data = req.body;    
-    console.log(data) 
+    let estado = "iniciado" 
     try {
         // Inserta los datos en la tabla CLIENTE y obtiene el ID       
-        const id_cliente = await insertCliente(data);
+        const id_cliente = await insertCliente(data, estado);
         // Inserta los datos en la tabla DATOS_JUBILATORIOS y obtiene el ID
         const id_jubilacion = await insertDatosJubilatorios(data, id_cliente);
 

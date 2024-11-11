@@ -7,5 +7,7 @@ const cliente = require('../controllers/ClienteController.js');
 
 // Ruta para obtener materia prima por nombre
 router.get('/cliente', cliente.getAll);
+router.put('/cliente/:id_cliente/:estado', cliente.editar);
+
 
 module.exports = router;
