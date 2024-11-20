@@ -20,7 +20,7 @@ exports.insertarCliente = async(req, res) => {
         res.status(200).json({ message: 'Datos insertados exitosamente' });
     } catch (error) {
         console.error('Error al insertar datos:', error);
-        res.status(500).json({ message: 'Error al insertar datos' });
+        res.status(500).json({ error: 'Error al insertar datos' });
     }
 }
 

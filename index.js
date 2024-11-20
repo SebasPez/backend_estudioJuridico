@@ -41,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use('/api', require('./routes/FormRouter.js'));
+app.use('/api', require('./routes/AdminRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
 app.use('/api', require('./routes/AnalisisRouter.js'));
 app.use('/api', require('./routes/MovimientoRouter.js'));
