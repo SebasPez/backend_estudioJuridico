@@ -1,11 +1,16 @@
 "use strict";
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const { login, logout, getProtectedData } = require("../controllers/AdminController");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const { existsUser } = require("../middleware/existsUser");
 
-//HACEMOS USO DE LOS CONTROLADORES
-const admin = require('../controllers/AdminController.js');
-const { existsUser } = require('../middleware/existsUser.js');
-// Ruta para obtener materia prima por nombre
-router.post('/admin/login', existsUser, admin.login);
+
+// Rutas públicas
+router.post("/admin/login", existsUser, login);
+router.post("/admin/logout", logout);
+
+// Ruta protegida (requiere autenticación)
+router.get("/admin/protected", authMiddleware, getProtectedData);
 
 module.exports = router;
