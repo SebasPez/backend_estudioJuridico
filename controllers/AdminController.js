@@ -32,7 +32,9 @@ exports.login = async (req, res) => {
             httpOnly: true, // Protege la cookie contra acceso desde JavaScript
             secure: process.env.MODO !== 'developer', // Solo enviar en HTTPS fuera de desarrollo
             sameSite: 'Strict', // Previene ataques CSRF
-            maxAge: 24 * 60 * 60 * 1000, // Tiempo de expiración: 1 día
+            // maxAge: 24 * 60 * 60 * 1000, 
+            maxAge: 60 * 1000, // Tiempo de expiración: 1 minuto
+
         });
 
         return res.status(200).json({

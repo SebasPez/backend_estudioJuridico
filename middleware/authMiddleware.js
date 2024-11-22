@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 exports.authMiddleware = (req, res, next) => {
-    const token = req.cookies.authToken;   
+    const token = req.cookies.authToken;  
+    console.log(token) 
     if (!token) {
         return res.status(401).json({ error: "No autorizado. Por favor, inicia sesión." });
     }

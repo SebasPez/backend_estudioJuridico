@@ -75,7 +75,8 @@ exports.insertDocAcompaniada = async (id_jubilacion, documental_acomp) => {
 
 exports.getDatosJubilatorios = (id_cliente) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT            
+        const sql = `SELECT
+            c.*,       
             dj.*,
             STRING_AGG(da.documental_acomp, ', ' ORDER BY da.documental_acomp) AS documental_acomp
             FROM cliente c
