@@ -32,8 +32,7 @@ exports.agregar = async (req, res) => {
     try {
         const id = await agregar(descripcion, id_cliente);
         res.status(200).json({ message: `Datos insertados exitosamente a la persona con id: ${id}` });
-    } catch (error) {
-        console.error('Error al insertar datos:', error);
+    } catch (error) {       
         res.status(500).json({ error: 'Error al insertar datos' });
     }
 }

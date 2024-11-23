@@ -91,3 +91,33 @@ exports.getDatosJubilatorios = (id_cliente) => {
         });
     });
 };
+
+exports.editDatoJubilatorio = async (tabla, id, atr, dato) => {
+    let query; 
+
+    if (tabla === 'datos_jubilatorios') {
+        query = `
+            UPDATE ${tabla}
+            SET ${atr} = $1      
+            WHERE id_jubilacion = $2
+            RETURNING id_jubilacion, ${atr};
+        `;
+    } else {
+        query = `
+            UPDATE ${tabla}
+            SET ${atr} = $1      
+            WHERE id_cliente = $2
+            RETURNING id_cliente, ${atr};
+        `;
+    }
+
+    const values = [dato, id];
+
+    try {
+        const result = await conexion.query(query, values);
+        return result.rows[0]; // Devuelve el resultado.
+    } catch (error) {       
+        throw error; // Propaga el error para manejarlo donde se llame esta función.
+    }
+};
+

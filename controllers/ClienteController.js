@@ -17,7 +17,7 @@ exports.getAll = async (req, res) => {
 exports.editar = async (req, res) => {
     const { id_cliente, estado } = req.params;
 
-    if (!id_cliente || !estado) return res.status(400).json({ error: "Faltan datos necesarios para editar el análisis" });
+    if (!id_cliente || !estado) return res.status(400).json({ error: "Faltan datos necesarios para editar" });
 
     try {
         const updatedAnalisis = await editar(id_cliente, estado);

@@ -1,6 +1,6 @@
 "use strict";
 const {    
-    insertCliente, insertDatosJubilatorios, insertDocAcompaniada, getDatosJubilatorios
+    insertCliente, insertDatosJubilatorios, insertDocAcompaniada, getDatosJubilatorios, editDatoJubilatorio
 } = require('../models/FormModel.js');
 
 exports.insertarCliente = async(req, res) => {
@@ -18,8 +18,7 @@ exports.insertarCliente = async(req, res) => {
         }
 
         res.status(200).json({ message: 'Datos insertados exitosamente' });
-    } catch (error) {
-        console.error('Error al insertar datos:', error);
+    } catch (error) {       
         res.status(500).json({ error: 'Error al insertar datos' });
     }
 }
@@ -33,5 +32,19 @@ exports.getDatosJubilatorios = async (req, res) => {
         return res.status(404).json({ error: "Aún no se han registrado datos jubilatorios de dicha persona" });
     } catch (error) {
         return res.status(500).json({ error: "Error de servidor" });
+    }
+};
+
+
+exports.editDatoJubilatorio = async (req, res) => {
+    const { tabla, id, atr, dato } = req.params;
+    if (!id || !atr || !dato) return res.status(400).json({ error: "Faltan datos necesarios para editar" });
+
+    try {
+        const updatedAnalisis = await editDatoJubilatorio(tabla, id, atr, dato);
+        if (!updatedAnalisis) return res.status(404).json({ error: "No fue posible cambiar el dato" });
+        return res.status(200).json({ message: "Dato editado exitosamente", data: updatedAnalisis });
+    } catch (error) {
+        res.status(500).json({ error: "Error de servidor" });
     }
 };

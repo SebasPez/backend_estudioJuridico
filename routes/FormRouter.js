@@ -8,5 +8,6 @@ const { existsClient } = require('../middleware/existsClient.js');
 
 router.post('/formulario', form.insertarCliente);
 router.get('/formulario/:id_cliente', existsClient, form.getDatosJubilatorios);
+router.put('/formulario/:tabla/:id/:atr/:dato', form.editDatoJubilatorio);
 
 module.exports = router;
