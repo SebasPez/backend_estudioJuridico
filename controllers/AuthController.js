@@ -1,7 +1,7 @@
 "use strict";
 const {
     get, getRoleById
-} = require('../models/AdminModel.js');
+} = require('../models/AuthModel.js');
 
 const jwt = require('jsonwebtoken');
 
@@ -50,7 +50,11 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie("authToken");
+    res.clearCookie("authToken", {
+        httpOnly: true,
+        secure: process.env.MODO !== 'developer', // Coincide con la configuración de creación
+        sameSite: process.env.MODO !== 'developer' ? 'None' : 'Lax', // Coincide con la configuración de creación
+    });
     res.status(200).json({ message: "Sesión cerrada exitosamente" });
 };
 
