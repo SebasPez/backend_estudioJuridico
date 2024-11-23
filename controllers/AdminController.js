@@ -31,9 +31,9 @@ exports.login = async (req, res) => {
         res.cookie('authToken', token, {
             httpOnly: true, // Protege la cookie contra acceso desde JavaScript
             secure: process.env.MODO !== 'developer', // Solo enviar en HTTPS fuera de desarrollo
-            sameSite: 'Strict', // Previene ataques CSRF
-            // maxAge: 24 * 60 * 60 * 1000, 
-            maxAge: 60 * 1000, // Tiempo de expiración: 1 minuto
+            sameSite: process.env.MODO !== 'developer' ? 'None' : 'Lax', // Permitir cookies en peticiones cruzadas en producción, // Previene ataques CSRF
+             maxAge: 24 * 60 * 60 * 1000, 
+           // maxAge: 60 * 1000, // Tiempo de expiración: 1 minuto
 
         });
 
