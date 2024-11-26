@@ -4,6 +4,7 @@ const express = require('express');
 const cookie = require('cookie-parser');
 const dontev = require('dotenv');
 const cors = require('cors');
+const { swaggerUi, swaggerSpec } = require('./swaggerConfig');
 
 const app = express();
 
@@ -45,9 +46,11 @@ app.use('/api', require('./routes/AuthRouter.js'));
 app.use('/api', require('./routes/ClienteRouter.js'));
 app.use('/api', require('./routes/AnalisisRouter.js'));
 app.use('/api', require('./routes/MovimientoRouter.js'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Selección del puerto según el modo
 const PORT = process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD;
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
