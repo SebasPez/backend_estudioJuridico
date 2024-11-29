@@ -4,7 +4,9 @@ const router = express.Router();
 
 //HACEMOS USO DE LOS CONTROLADORES
 const cliente = require('../controllers/ClienteController.js');
-const {authMiddleware} = require('../middleware/authMiddleware')
+const form = require('../controllers/FormController.js')
+const {authMiddleware} = require('../middleware/authMiddleware');
+const { existsNewClient } = require('../middleware/existsNewClient.js');
 
 /**
  * @swagger
@@ -93,6 +95,7 @@ const {authMiddleware} = require('../middleware/authMiddleware')
 
 // Ruta para obtener materia prima por nombre
 router.get('/cliente', authMiddleware, cliente.getAll);
+router.post('/cliente', existsNewClient, authMiddleware, form.insertarCliente);
 router.put('/cliente/:id_cliente/:estado',  cliente.editar);
 
 

@@ -32,7 +32,7 @@ exports.agregar = async (req, res) => {
     try {       
         const id = await agregar(tipo_analisis, id_cliente);
         if (!id) return res.status(404).json({ error: "El análisis no se puedo agregar" });
-        return res.status(200).json({ message: `Datos insertados exitosamente a la persona con id: ${id}` });
+        return res.status(200).json({ message: `Analisis creado exitosamente` });
     } catch (error) {
         res.status(500).json({ error: 'Error se servidor' });
     }
