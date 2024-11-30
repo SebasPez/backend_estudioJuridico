@@ -1,27 +1,36 @@
 "use strict";
 const {
-    get, getRoleById
+    getUserWithRole
 } = require('../models/AuthModel.js');
 
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 exports.login = async (req, res) => {
-    const { nombre_usuario, pass } = req.body;    
-    try {
-        // Obtener el usuario y su id_rol
-        const resp = await get(nombre_usuario, pass);
-        if (!resp) return res.status(404).json({ error: "Usuario o contraseña incorrectos" });
-        
-        const usuario = resp[0];
-        const rol = await getRoleById(usuario.id_rol);
-       
-        if (!rol) return res.status(404).json({ error: "Rol no encontrado" });
     
+    const { nombre_usuario, pass } = req.body;
+   
+    try {   
+        const resp = await getUserWithRole(nombre_usuario);
+       
+        // Verificar si se encontró el usuario
+        if (resp.length === 0) {
+            return res.status(404).json({ error: "Usuario o contraseña incorrectos" });
+        }
+
+        const usuario = resp[0]; // Primer resultado de la consulta
+        const rol = usuario.tipo_rol; // El nombre del rol ya está en el resultado
+        
+        const isPasswordCorrect = await bcrypt.compare(pass, usuario.pass);
+      
+        if (!isPasswordCorrect) return res.status(404).json({ error: "Usuario o contraseña incorrectos" });
+        
+
         const token = jwt.sign(
             {
                 id_usuario: usuario.id_usuario,
                 nombre_usuario: usuario.nombre_usuario,
-                rol: rol.nombre_rol, // Ejemplo de agregar el nombre del rol
+                rol: rol,
             },
             process.env.SECRET_KEY, // Clave secreta para firmar el token
             { expiresIn: '1d' } // El token expirará en 1 día

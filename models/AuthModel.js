@@ -24,3 +24,16 @@ exports.getRoleById = async (id_rol) => {
     }
 };
 
+exports.getUserWithRole = async (nombre_usuario) => {    
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT u.id_usuario, u.nombre_usuario, u.pass, u.id_rol, r.tipo_rol
+                 FROM usuario u
+                 INNER JOIN rol r ON u.id_rol = r.id_rol
+                 WHERE u.nombre_usuario = $1`;
+        conexion.query(sql, [nombre_usuario], (err, resultados) => {            
+            if (err) return reject({ status: 500, message: 'Error al obtener el usuario' });
+            if (resultados && resultados.rows.length > 0) return resolve(resultados.rows); // Devuelve las filas si hay resultados
+            resolve([]);
+        });
+    });
+};

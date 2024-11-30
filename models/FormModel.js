@@ -3,6 +3,7 @@ const conexion = require('../database/Conexion.js');
 
 // Función para insertar en la tabla CLIENTE
 exports.insertCliente = async (data, estado) => {
+   
     const query = `
     INSERT INTO CLIENTE (nombre, cuil, edad, localidad, celular, mail, clave_abc, estado_civil, cod_postal, estado) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id_cliente
@@ -19,17 +20,22 @@ exports.insertCliente = async (data, estado) => {
         data.cod_postal || null,
         estado
     ];
-
-    const result = await conexion.query(query, values);
-    return result.rows[0].id_cliente;
+   
+    try {
+        const result = await conexion.query(query, values);       
+        return result.rows[0].id_cliente;
+    } catch (error) {
+        console.error('Error en la consulta SQL:', error.message);
+        throw error; // Lanza el error para que el controlador lo maneje
+    }
 }
 
 // Función para insertar en la tabla DATOS_JUBILATORIOS
 exports.insertDatosJubilatorios = async (data, id_cliente) => {
     const query = `
     INSERT INTO DATOS_JUBILATORIOS (tipo_jubilacion, serv_autonomo, serv_sinCargar, cargos_sinFigurar, ruralidad, mejor_cargo, diegep, 
-    cargos_jerarquicos, caja_otraPcia, art_pendiente, cobro_sucursal,porcentaje, simultaneidad, antiguedad, ingreso_tramite, id_cliente)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id_jubilacion
+    cargos_jerarquicos, caja_otraPcia, art_pendiente, cobro_sucursal,porcentaje, clave_afip, simultaneidad, antiguedad, ingreso_tramite, id_cliente)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING id_jubilacion
   `;
     const values = [      
         data.tipo_jubilacion,
@@ -44,6 +50,7 @@ exports.insertDatosJubilatorios = async (data, id_cliente) => {
         data.art_pendiente || null,
         data.cobro_sucursal || null,
         null,
+        data.clave_afip || null,
         null,
         null,
         null,

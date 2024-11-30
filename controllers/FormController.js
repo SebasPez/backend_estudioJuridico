@@ -5,18 +5,18 @@ const {
 
 exports.insertarCliente = async(req, res) => {
     const data = req.body;    
-    let estado = "iniciado" 
-    try {
+    let estado = "iniciado"  
+    try {        
         // Inserta los datos en la tabla CLIENTE y obtiene el ID       
         const id_cliente = await insertCliente(data, estado);
+       
         // Inserta los datos en la tabla DATOS_JUBILATORIOS y obtiene el ID
         const id_jubilacion = await insertDatosJubilatorios(data, id_cliente);
-
+        
         // Inserta los datos en la tabla DOC_ACOMPANIADA si existe documental_acomp
         if (Array.isArray(data.documental_acomp)) {
             await insertDocAcompaniada(id_jubilacion, data.documental_acomp);
         }
-
         res.status(200).json({ message: 'Datos insertados exitosamente' });
     } catch (error) {       
         res.status(500).json({ error: 'Error al insertar datos' });
