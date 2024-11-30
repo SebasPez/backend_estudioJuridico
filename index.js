@@ -49,8 +49,8 @@ app.use('/api', require('./routes/MovimientoRouter.js'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Selección del puerto según el modo
-const PORT = process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD;
-app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
+const PORT_URL = process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD;
+app.listen(PORT_URL, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT_URL}`);
 });
-console.log(`Documentación disponible en http://localhost:${PORT}/api-docs`);
+console.log(`Documentación disponible en http://localhost:${PORT_URL}/api-docs`);

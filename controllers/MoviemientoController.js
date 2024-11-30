@@ -31,7 +31,7 @@ exports.agregar = async (req, res) => {
     const { descripcion, id_cliente } = req.body;  
     try {
         const id = await agregar(descripcion, id_cliente);
-        res.status(200).json({ message: `Movimiente creado exitosamente` });
+        res.status(200).json({ message: `Movimiento creado exitosamente` });
     } catch (error) {       
         res.status(500).json({ error: 'Error al insertar datos' });
     }
