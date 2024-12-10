@@ -3,7 +3,7 @@ const conexion = require('../database/Conexion.js');
 
 exports.get = (id_cliente) => {
     return new Promise((resolve, reject) => {
-        const sql = `SELECT * FROM MOVIMIENTO WHERE id_cliente = $1 ORDER BY fecha_mov DESC`;
+        const sql = `SELECT * FROM MOVIMIENTO WHERE id_cliente = $1 ORDER BY id_movimiento DESC`;
         conexion.query(sql, [id_cliente], (err, resultados) => {
             if (err) return reject({ status: 500, message: 'Error al obtener los movimientos' });
             if (resultados && resultados.rows.length > 0) return resolve(resultados.rows); // Devuelve las filas si hay resultados
