@@ -27,11 +27,12 @@ exports.borrar = async (req, res) => {
 };
 
 
-exports.agregar = async (req, res) => {
+exports.agregar = async (req, res, io) => {
     const { tipo_analisis, id_cliente } = req.body;   
     try {       
         const id = await agregar(tipo_analisis, id_cliente);
         if (!id) return res.status(404).json({ error: "El análisis no se puedo agregar" });
+        io.emit('nuevo-analisis', { id });
         return res.status(200).json({ message: `Análisis creado exitosamente` });
     } catch (error) {
         res.status(500).json({ error: 'Error se servidor' });

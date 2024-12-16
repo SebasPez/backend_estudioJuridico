@@ -94,9 +94,15 @@ const { existsNewClient } = require('../middleware/existsNewClient.js');
  */
 
 // Ruta para obtener materia prima por nombre
-router.get('/cliente', authMiddleware, cliente.getAll);
-router.post('/cliente', existsNewClient, authMiddleware, form.insertarCliente);
-router.put('/cliente/:id_cliente/:estado',  cliente.editar);
+
 
 
 module.exports = router;
+
+
+module.exports = (io) => {
+    router.get('/cliente', authMiddleware, cliente.getAll);
+    router.post('/cliente', existsNewClient, authMiddleware, (req, res) => form.insertarCliente(req, res, io));
+    router.put('/cliente/:id_cliente/:estado', (req, res) => cliente.editar(req, res, io));
+    return router;
+};

@@ -14,7 +14,7 @@ exports.getAll = async (req, res) => {
     }
 };
 
-exports.editar = async (req, res) => {
+exports.editar = async (req, res,io) => {
     const { id_cliente, estado } = req.params;
 
     if (!id_cliente || !estado) return res.status(400).json({ error: "Faltan datos necesarios para editar" });
@@ -22,6 +22,7 @@ exports.editar = async (req, res) => {
     try {
         const updatedAnalisis = await editar(id_cliente, estado);
         if (!updatedAnalisis) return res.status(404).json({ error: "El estado no se pudo cambiar" });
+        io.emit('nuevo-estado', { id_cliente });
         return res.status(200).json({ message: "Dato editado exitosamente", data: updatedAnalisis });
     } catch (error) {       
         res.status(500).json({ error: "Error de servidor" });

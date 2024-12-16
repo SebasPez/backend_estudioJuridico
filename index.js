@@ -5,6 +5,10 @@ const dontev = require('dotenv');
 const cors = require('cors');
 const { swaggerUi, swaggerSpec } = require('./swaggerConfig');
 
+const http = require('http'); // Añadir http
+const socketIo = require('socket.io'); // Importar socket.io
+const { isObject } = require('util');
+
 const app = express();
 
 // Cargamos las variables de entorno
@@ -39,17 +43,30 @@ app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Creamos el servidor HTTP para WebSocket
+const server = http.createServer(app);
+
+// Configuramos WebSocket con socket.io
+const io = socketIo(server, {
+    cors: {
+        origin: allowedOrigins,
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
+
+
 // Rutas
-app.use('/api', require('./routes/FormRouter.js'));
+app.use('/api', require('./routes/FormRouter.js')(io));
 app.use('/api', require('./routes/AuthRouter.js'));
-app.use('/api', require('./routes/ClienteRouter.js'));
-app.use('/api', require('./routes/AnalisisRouter.js'));
-app.use('/api', require('./routes/MovimientoRouter.js'));
+app.use('/api', require('./routes/ClienteRouter.js')(io));
+app.use('/api', require('./routes/AnalisisRouter.js')(io));
+app.use('/api', require('./routes/MovimientoRouter.js')(io));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Selección del puerto según el modo
 const PORT_URL = process.env.MODO === 'developer' ? process.env.PORT_DEV : process.env.PORT_PROD;
-app.listen(PORT_URL, () => {
+server.listen(PORT_URL, () => {
     console.log(`Servidor escuchando en el puerto ${PORT_URL}`);
 });
 console.log(`Documentación disponible en http://localhost:${PORT_URL}/api-docs`);

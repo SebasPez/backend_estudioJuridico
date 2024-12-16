@@ -27,11 +27,13 @@ exports.get = async (req, res) => {
 //     }
 // };
 
-exports.agregar = async (req, res) => {
+exports.agregar = async (req, res, io) => {
     const { descripcion, id_cliente } = req.body;  
     try {
         const id = await agregar(descripcion, id_cliente);
-        res.status(200).json({ message: `Movimiento creado exitosamente` });
+        if (!id) return res.status(404).json({ error: "El movimiento no se puedo agregar" });
+        io.emit('nuevo-movimiento', { id });
+        return res.status(200).json({ message: `Movimiento creado exitosamente` });
     } catch (error) {       
         res.status(500).json({ error: 'Error al insertar datos' });
     }
