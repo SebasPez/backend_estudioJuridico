@@ -103,6 +103,6 @@ module.exports = router;
 module.exports = (io) => {
     router.get('/cliente', authMiddleware, cliente.getAll);
     router.post('/cliente', existsNewClient, authMiddleware, (req, res) => form.insertarCliente(req, res, io));
-    router.put('/cliente/:id_cliente/:estado', (req, res) => cliente.editar(req, res, io));
+    router.put('/cliente/:id_cliente/:estado', authMiddleware, (req, res) => cliente.editar(req, res, io));
     return router;
 };

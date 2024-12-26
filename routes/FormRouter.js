@@ -9,9 +9,9 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 
 
 module.exports = (io) => {
-    router.post('/formulario', form.insertarCliente);
+    router.post('/formulario', (req, res) => form.insertarCliente(req, res, io));
     router.get('/formulario/:id_cliente', existsClient, authMiddleware, form.getDatosJubilatorios);
-    router.put('/formulario/:tabla/:id/:atr/:dato', (req, res) => form.editDatoJubilatorio(req, res, io));
+    router.put('/formulario/:tabla/:id/:atr/:dato', authMiddleware, (req, res) => form.editDatoJubilatorio(req, res, io));
     
     return router;
 };

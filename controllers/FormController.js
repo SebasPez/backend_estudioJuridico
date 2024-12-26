@@ -5,7 +5,7 @@ const {
 
 exports.insertarCliente = async(req, res, io) => {
     const data = req.body;    
-    let estado = "iniciado"  
+    let estado = "pendiente"  
     try {        
         // Inserta los datos en la tabla CLIENTE y obtiene el ID       
         const id_cliente = await insertCliente(data, estado);

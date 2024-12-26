@@ -23,7 +23,7 @@ exports.editar = async (req, res,io) => {
         const updatedAnalisis = await editar(id_cliente, estado);
         if (!updatedAnalisis) return res.status(404).json({ error: "El estado no se pudo cambiar" });
         io.emit('nuevo-estado', { id_cliente });
-        return res.status(200).json({ message: "Dato editado exitosamente", data: updatedAnalisis });
+        return res.status(200).json({ message: "Estado modificado exitosamente!", data: updatedAnalisis });
     } catch (error) {       
         res.status(500).json({ error: "Error de servidor" });
     }
