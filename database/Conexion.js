@@ -11,25 +11,19 @@ const conexion = new Pool({
 
 // Función para crear roles por defecto
 const initializeDefaultRoles = async () => {
-    const roles = ['admin', 'default'];
+    let roles = ['super_admin', 'admin', 'user'];
 
     try {
         for (let role of roles) {
             // Verificar si el rol ya existe
             const result = await conexion.query("SELECT * FROM rol WHERE tipo_rol = $1", [role]);
-
-            if (result.rows.length === 0) {             
-                await conexion.query("INSERT INTO rol (tipo_rol) VALUES ($1)", [role]);
-               
-            } else {
-                console.log(`El rol ${role} ya existe.`);
-            }
+            if (result.rows.length === 0) await conexion.query("INSERT INTO rol (tipo_rol) VALUES ($1)", [role]); 
+            else console.log(`El rol ${role} ya existe.`);
         }
     } catch (error) {
         console.error("Error al inicializar los roles por defecto:", error.message);
     }
-};
-
+}
 
 // Función para crear el usuario por defecto
 const initializeDefaultUser = async () => {
@@ -50,7 +44,7 @@ const initializeDefaultUser = async () => {
         const hashedPassword = await bcrypt.hash(defaultPassword, saltRounds);
 
         // Asignar el rol de admin
-        const roleResult = await conexion.query("SELECT id_rol FROM rol WHERE tipo_rol = 'admin'");
+        const roleResult = await conexion.query("SELECT id_rol FROM rol WHERE tipo_rol = 'super_admin'");
         const roleId = roleResult.rows[0].id_rol;
         
 
