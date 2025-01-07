@@ -55,7 +55,6 @@ const io = socketIo(server, {
     }
 });
 
-
 // Rutas
 app.use('/api', require('./routes/FormRouter.js')(io));
 app.use('/api', require('./routes/AuthRouter.js'));

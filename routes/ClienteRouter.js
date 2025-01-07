@@ -3,10 +3,12 @@ const express = require('express');
 const router = express.Router();
 
 //HACEMOS USO DE LOS CONTROLADORES
-const cliente = require('../controllers/ClienteController.js');
-const form = require('../controllers/FormController.js')
+const {getAll, editar} = require('../controllers/ClienteController.js');
+const {insertarCliente} = require('../controllers/FormController.js')
 const {authMiddleware} = require('../middleware/authMiddleware');
 const { existsNewClient } = require('../middleware/existsNewClient.js');
+
+// DUCUMENTACIÓN SWAGGER
 
 /**
  * @swagger
@@ -95,14 +97,9 @@ const { existsNewClient } = require('../middleware/existsNewClient.js');
 
 // Ruta para obtener materia prima por nombre
 
-
-
-module.exports = router;
-
-
 module.exports = (io) => {
-    router.get('/cliente', authMiddleware, cliente.getAll);
-    router.post('/cliente', existsNewClient, authMiddleware, (req, res) => form.insertarCliente(req, res, io));
-    router.put('/cliente/:id_cliente/:estado', authMiddleware, (req, res) => cliente.editar(req, res, io));
+    router.get('/cliente', authMiddleware, getAll);
+    router.post('/cliente', existsNewClient, authMiddleware, (req, res) => insertarCliente(req, res, io));
+    router.put('/cliente/:id_cliente/:estado', authMiddleware, (req, res) => editar(req, res, io));
     return router;
 };

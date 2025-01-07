@@ -3,15 +3,27 @@ const conexion = require('../database/Conexion.js');
 const bcrypt = require('bcrypt');
 
 /**
- * Middleware que verifica si un usuario con el nombre y password especificado existe en la base de datos.
- * @param {object} req - El objeto de solicitud HTTP que contiene los parámetros de la ruta.
- * @param {object} res - El objeto de respuesta HTTP.
- * @param {function} next - Función para pasar el control al siguiente middleware o ruta.
- *
- * @throws {Error} Si hay un error en la consulta de la base de datos.
- *
- * Si el usuario con el nombre y password especificado existe en la base de datos, llama a la función `next` para permitir que la solicitud continúe.
- * Si no existe, responde con un código de estado 404 y un mensaje de error.
+ * Middleware para verificar la existencia de un usuario y validar su contraseña.
+ * 
+ * Este middleware consulta la base de datos para verificar si existe un usuario con el nombre de usuario proporcionado 
+ * en el cuerpo de la solicitud. Si el usuario no existe, se responde con un mensaje de error. Si el usuario existe, 
+ * se compara la contraseña proporcionada con la contraseña almacenada de manera encriptada en la base de datos.
+ * Si la contraseña es incorrecta, se responde con un error. Si la contraseña es correcta, se pasa al siguiente middleware.
+ * 
+ * @param {Object} req - El objeto de solicitud HTTP, que contiene el cuerpo de la solicitud con `nombre_usuario` y `pass`.
+ * @param {Object} res - El objeto de respuesta HTTP, utilizado para devolver respuestas de error si el usuario no existe 
+ *                       o si la contraseña es incorrecta.
+ * @param {Function} next - La función para pasar al siguiente middleware o controlador si el usuario existe y la contraseña 
+ *                           es válida.
+ * 
+ * @returns {Object} - Respuesta de error si el usuario no existe o la contraseña es incorrecta, o pasa al siguiente 
+ *                     middleware si la contraseña es válida.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * app.post('/login', existsUser, (req, res) => {
+ *   // Lógica para iniciar sesión
+ * });
  */
 exports.existsUser = (req, res, next) => {
     const { nombre_usuario, pass } = req.body;

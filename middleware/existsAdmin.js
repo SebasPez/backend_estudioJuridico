@@ -2,15 +2,23 @@
 const conexion = require('../database/Conexion.js');
 
 /**
- * Middleware que verifica si el usuario (admin) existe en la base de datos.
- * @param {object} req - El objeto de solicitud HTTP que contiene los parámetros de la ruta.
- * @param {object} res - El objeto de respuesta HTTP.
- * @param {function} next - Función para pasar el control al siguiente middleware o ruta.
- *
- * @throws {Error} Si hay un error en la consulta de la base de datos.
- *
- * Si el usuario especificado existe en la base de datos, responde con un código de estado 404 y un mensaje de error.
- * Si no existe, llama a la función `next` para permitir que la solicitud continúe.
+ * Middleware para verificar si un administrador ya existe en la base de datos.
+ * 
+ * Este middleware consulta la base de datos para verificar si el nombre de usuario proporcionado en el cuerpo
+ * de la solicitud ya está registrado en la tabla `USUARIO`. Si el administrador ya existe, se responde con un 
+ * mensaje de error. Si no existe, el flujo de la solicitud continúa con el siguiente middleware o controlador.
+ * 
+ * @param {Object} req - El objeto de solicitud HTTP, que contiene el cuerpo con el nombre de usuario.
+ * @param {Object} res - El objeto de respuesta HTTP, usado para devolver una respuesta de error en caso de conflicto.
+ * @param {Function} next - La función para pasar al siguiente middleware o controlador si el administrador no existe.
+ * 
+ * @returns {Object} - Respuesta de error si el administrador ya existe, o pasa al siguiente middleware si no existe.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * app.post('/registro', existsAdmin, (req, res) => {
+ *   // Lógica de registro de usuario
+ * });
  */
 exports.existsAdmin = (req, res, next) => {
     const { usuario } = req.body;

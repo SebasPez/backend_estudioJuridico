@@ -2,11 +2,30 @@
 const conexion = require('../database/Conexion.js');
 
 /**
- * Obtiene el ID de un rol de la base de datos basado en el nombre del rol.
+ * Obtiene el ID de un rol a partir de su nombre.
  * 
- * @param {string} rol - El nombre del rol cuyo ID se desea obtener.
- * @returns {Promise} Una promesa que resuelve con el ID del rol si se encuentra, o resuelve con un arreglo vacío si no se encuentra el rol.
- * @throws {Object} Un objeto con los detalles del error si ocurre un problema con la consulta a la base de datos.
+ * Esta función realiza una consulta SQL para obtener el ID de un rol en la base de datos
+ * basándose en el nombre del rol (`tipo_rol`). Si se encuentra el rol, devuelve el ID del rol.
+ * Si no se encuentra el rol, devuelve una lista vacía.
+ * 
+ * @param {string} rol - El nombre del rol cuya ID se desea obtener.
+ * @returns {Promise<Object[]>} - Una promesa que se resuelve con un array de objetos que contiene
+ * el `id_rol` del rol encontrado. Si no se encuentra el rol, devuelve un array vacío.
+ * @throws {Error} - Si ocurre un error al ejecutar la consulta SQL.
+ * 
+ * @example
+ * // Ejemplo de uso de la función:
+ * getRoleByName('admin')
+ *   .then(roles => {
+ *     if (roles.length > 0) {
+ *       console.log("ID del rol encontrado:", roles[0].id_rol);
+ *     } else {
+ *       console.log("Rol no encontrado.");
+ *     }
+ *   })
+ *   .catch(error => {
+ *     console.error("Error al obtener el rol:", error);
+ *   });
  */
 exports.getRoleByName = (rol) => {
     return new Promise((resolve, reject) => {

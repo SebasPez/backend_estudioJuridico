@@ -5,6 +5,8 @@ const { login, logout, getProtectedData } = require("../controllers/AuthControll
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { existsUser } = require("../middleware/existsUser");
 
+// DUCUMENTACIÓN SWAGGER
+
 /**
  * @swagger
  * tags:
@@ -86,7 +88,6 @@ const { existsUser } = require("../middleware/existsUser");
  *                   type: string
  *                   example: Error de servidor
  */
-
 
 /**
  * @swagger

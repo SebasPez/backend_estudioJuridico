@@ -2,15 +2,21 @@
 const conexion = require('../database/Conexion.js');
 
 /**
- * Registra un nuevo usuario en la base de datos.
+ * Inserta un nuevo usuario administrador en la base de datos.
  * 
- * @async
- * @function register
- * @param {string} nombre - El nombre del usuario.
- * @param {string} password - La contraseña del usuario.
- * @param {number} id_rol - El ID del rol asignado al usuario.
- * @returns {Object} El nuevo usuario registrado con todos sus datos.
- * @throws {Error} Si ocurre un error al registrar el usuario.
+ * Esta función toma el nombre de usuario, la contraseña cifrada y el ID del rol 
+ * para insertar un nuevo registro en la tabla de usuarios. Si el proceso es exitoso, 
+ * devuelve el ID del nuevo usuario.
+ * 
+ * @param {string} usuario - El nombre del usuario administrador que se desea registrar.
+ * @param {string} password - La contraseña cifrada del administrador.
+ * @param {number} id_rol - El ID del rol del administrador, que generalmente es 1 para el rol de 'admin'.
+ * @returns {Object} - El objeto del nuevo usuario con el ID generado.
+ * @throws {Error} - Si ocurre algún error al registrar el usuario, se lanza una excepción.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * const nuevoAdmin = await register('admin', 'hashed_password', 1);
  */
 exports.register = async (usuario, password, id_rol) => {
     try {
@@ -26,6 +32,23 @@ exports.register = async (usuario, password, id_rol) => {
     }
 };
 
+/**
+ * Obtiene todos los usuarios con un rol específico de la base de datos.
+ * 
+ * Esta función consulta todos los usuarios que tienen un rol determinado (por ejemplo, 
+ * 'admin') y devuelve una lista de usuarios ordenada por el nombre de usuario de forma 
+ * descendente. Si no se encuentran coincidencias, devuelve una lista vacía.
+ * 
+ * @param {number} id_rol - El ID del rol que se busca en la base de datos (por ejemplo, 
+ * el ID de 'admin').
+ * @returns {Promise<Array>} - Una promesa que resuelve con una lista de usuarios que 
+ * tienen el rol especificado o una lista vacía si no se encuentran resultados.
+ * @throws {Error} - Si ocurre un error en la consulta, se rechaza la promesa con un mensaje de error.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * const admins = await getAll(1); // Obtiene todos los usuarios con el rol 'admin'
+ */
 exports.getAll = (id_rol) => {
     return new Promise((resolve, reject) => {
         const sql = `SELECT * FROM USUARIO WHERE id_rol = $1 ORDER BY nombre_usuario DESC`;
@@ -37,6 +60,29 @@ exports.getAll = (id_rol) => {
     });
 };
 
+/**
+ * Elimina un usuario (administrador) de la base de datos.
+ * 
+ * Esta función recibe el ID de un usuario y ejecuta una consulta SQL para eliminarlo 
+ * de la tabla `USUARIO`. Si la eliminación es exitosa, resuelve la promesa con `true`. 
+ * Si no se encuentra el usuario o no se elimina ninguna fila, resuelve con `false`. 
+ * En caso de error, la promesa se rechaza con el error correspondiente.
+ * 
+ * @param {number} id - El ID del usuario que se desea eliminar.
+ * @param {Object} res - El objeto de respuesta HTTP para manejar cualquier error.
+ * @returns {Promise<boolean>} - Una promesa que resuelve con `true` si el usuario fue eliminado 
+ * exitosamente o `false` si no se encontró el usuario.
+ * @throws {Error} - Si ocurre un error en la consulta, la promesa será rechazada con el error correspondiente.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * const deleted = await deleteUser(1);
+ * if (deleted) {
+ *     console.log("Usuario eliminado");
+ * } else {
+ *     console.log("No se pudo eliminar al usuario");
+ * }
+ */
 exports.deleteUser = (id, res) => {
     return new Promise((resolve, reject) => {
         const sql = `DELETE FROM USUARIO WHERE id_usuario = $1`;
