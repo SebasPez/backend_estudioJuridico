@@ -1,6 +1,6 @@
 "use strict";
 const {
-    register, getAll, deleteUser
+    register, getAll, deleteUser, updatePass
 } = require('../models/UserModel.js');
 
 const {
@@ -117,5 +117,40 @@ exports.deleteUser = async (req, res) => {
         else return res.status(404).json({ error: "Error: No se ha podido eliminar" })
     } catch (error) {
         return res.status(500).json({ error: "Error de servidor" });
+    }
+};
+
+/**
+ * Controlador para actualizar la contraseña de un usuario.
+ * 
+ * Este controlador maneja la solicitud para actualizar la contraseña de un usuario basado en su ID.
+ * La nueva contraseña se encripta utilizando bcrypt antes de ser almacenada en la base de datos.
+ * Si la actualización es exitosa, se devuelve un mensaje de éxito. Si ocurre un error, se maneja adecuadamente.
+ * 
+ * @param {Object} req - El objeto de la solicitud que contiene los parámetros `id` y `pass`.
+ * @param {Object} res - El objeto de la respuesta utilizado para devolver el mensaje de éxito o error.
+ * 
+ * @returns {JSON} Respuesta con un mensaje de éxito o un error.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * app.put('/user/:id/:pass', updatePassController);
+ */
+exports.updatePass = async (req, res) => {
+    const { id, pass } = req.params;   
+    try {
+        const salt = await bcrypt.genSalt(8);
+        const hashedPassword = await bcrypt.hash(pass, salt);
+        // Llamar al modelo para actualizar la configuración
+        const result = await updatePass(id, hashedPassword);
+        console.log(result)
+        // Si la actualización fue exitosa
+        if (result.rowCount > 0) {
+            return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+        } else {
+            return res.status(404).json({ error: 'Error al actualizar la contraseña' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: 'Error de servidor' });
     }
 };

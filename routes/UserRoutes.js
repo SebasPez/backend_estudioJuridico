@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, getAll, deleteUser } = require("../controllers/UserController.js");
+const { register, getAll, deleteUser, updatePass } = require("../controllers/UserController.js");
 const { authMiddleware } = require("../middleware/authMiddleware.js");
 const { existsAdmin } = require("../middleware/existsAdmin.js");
 
@@ -11,7 +11,7 @@ const { existsAdmin } = require("../middleware/existsAdmin.js");
 /**
  * @swagger
  * tags:
- *   name: Usuarios
+ *   name: Administradores
  *   description: Endpoints para gestionar usuarios
  */
 
@@ -199,9 +199,66 @@ const { existsAdmin } = require("../middleware/existsAdmin.js");
  *                   type: string
  *                   example: "Error de servidor"
  */
+
+/**
+ * @swagger
+ * /user/{id}/{pass}:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Actualizar la contraseña de un usuario
+ *     description: Este endpoint permite actualizar la contraseña de un usuario especificado por su ID.
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID del usuario cuya contraseña se desea actualizar
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - name: pass
+ *         in: path
+ *         description: Nueva contraseña del usuario (se encripta automáticamente antes de almacenarse)
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Contraseña actualizada correctamente
+ *       404:
+ *         description: Error al actualizar la contraseña
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error al actualizar la contraseña
+ *       500:
+ *         description: Error de servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Error de servidor
+ *     security:
+ *       - bearerAuth: []
+ */
 router.post("/user", authMiddleware, existsAdmin, register);
 router.get('/user', authMiddleware, getAll);
 router.delete('/user/:id_usuario', authMiddleware, deleteUser);
+router.put("/user/:id/:pass", authMiddleware, updatePass);
 
 
 module.exports = router;

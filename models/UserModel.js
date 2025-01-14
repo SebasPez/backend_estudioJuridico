@@ -94,3 +94,45 @@ exports.deleteUser = (id, res) => {
         });
     });
 };
+
+/**
+ * Servicio para actualizar la contraseña de un usuario en la base de datos.
+ * 
+ * Esta función actualiza la contraseña de un usuario específico basado en su ID.
+ * La contraseña proporcionada ya debe estar encriptada utilizando bcrypt.
+ * 
+ * @param {Number} id - El ID del usuario cuya contraseña se actualizará.
+ * @param {String} pass - La nueva contraseña ya encriptada.
+ * 
+ * @returns {Object} El resultado de la consulta SQL.
+ * 
+ * @throws {Error} Si ocurre un error en la base de datos, se lanza una excepción.
+ * 
+ * @example
+ * // Ejemplo de uso:
+ * updatePass(1, 'hashedPassword')
+ *   .then(result => {
+ *     if (result.rowCount > 0) {
+ *       console.log("Contraseña actualizada con éxito.");
+ *     } else {
+ *       console.log("No se encontró el usuario para actualizar.");
+ *     }
+ *   })
+ *   .catch(error => {
+ *     console.error(error); // Maneja los errores durante la actualización
+ *   });
+ */
+exports.updatePass = async (id, pass) => {
+    const query = `
+        UPDATE USUARIO
+        SET pass = $1            
+        WHERE id_usuario = $2;
+    `;
+    const values = [pass, id];
+    try {
+        const result = await conexion.query(query, values);
+        return result;
+    } catch (err) {
+        throw new Error('Error en la base de datos');
+    }
+};

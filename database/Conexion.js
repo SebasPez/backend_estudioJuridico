@@ -124,7 +124,7 @@ const initializeDatabase = async () => {
     await initializeDefaultRoles();  // Inicializar roles
     await initializeDefaultUser()// Inicializar usuario por defecto
 };
-initializeDatabase()
 
+initializeDatabase()
 
 module.exports = conexion;

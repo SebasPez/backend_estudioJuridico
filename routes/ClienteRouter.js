@@ -95,8 +95,6 @@ const { existsNewClient } = require('../middleware/existsNewClient.js');
  *         description: Error del servidor
  */
 
-// Ruta para obtener materia prima por nombre
-
 module.exports = (io) => {
     router.get('/cliente', authMiddleware, getAll);
     router.post('/cliente', existsNewClient, authMiddleware, (req, res) => insertarCliente(req, res, io));
