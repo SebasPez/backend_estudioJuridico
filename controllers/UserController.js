@@ -1,6 +1,6 @@
 "use strict";
 const {
-    register, getAll, deleteUser, updatePass
+    register, getAll, deleteUser, updatePass, getUser, updateUser, getPass
 } = require('../models/UserModel.js');
 
 const {
@@ -149,6 +149,48 @@ exports.updatePass = async (req, res) => {
             return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
         } else {
             return res.status(404).json({ error: 'Error al actualizar la contraseña' });
+        }
+    } catch (error) {
+        return res.status(500).json({ error: 'Error de servidor' });
+    }
+};
+
+
+exports.getUser = async (req, res) => {
+    const { rol } = req.params;
+    try {
+        const id_rol = await getRoleByName(rol);
+
+        let response = await getUser(id_rol[0].id_rol);
+        if (response && response.length > 0)
+            return res.status(200).json({ response });
+        return res.status(404).json({ error: "No hay administrador" });
+    } catch (error) {
+        return res.status(500).json({ error: "Error de servidor" });
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { usuario, pass_actual, pass_nueva } = req.body;
+
+    try {
+        const pass = await getPass(id)
+        const isPasswordCorrect = await bcrypt.compare(pass_actual, pass[0].pass);      
+        if (isPasswordCorrect) {
+            const salt = await bcrypt.genSalt(8);
+            const hashedPassword = await bcrypt.hash(pass_nueva, salt);
+            // Llamar al modelo para actualizar la configuración
+            const result = await updateUser(id, usuario, hashedPassword);
+
+            // Si la actualización fue exitosa
+            if (result.rowCount > 0) {
+                return res.status(200).json({ message: 'Actualizado correctamente' });
+            } else {
+                return res.status(404).json({ error: 'Error al actualizar información' });
+            }
+        } else {
+            return res.status(404).json({ error: "Contraseña no coincide" });
         }
     } catch (error) {
         return res.status(500).json({ error: 'Error de servidor' });

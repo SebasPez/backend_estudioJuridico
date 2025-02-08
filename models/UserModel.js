@@ -136,3 +136,40 @@ exports.updatePass = async (id, pass) => {
         throw new Error('Error en la base de datos');
     }
 };
+
+exports.getUser = (id_rol) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT id_usuario, nombre_usuario FROM USUARIO WHERE id_rol = $1`;
+        conexion.query(sql, [id_rol], (err, resultados) => {
+            if (err) return reject({ status: 500, message: 'Error al obtener al administrar' });
+            if (resultados && resultados.rows.length > 0) return resolve(resultados.rows); // Devuelve las filas si hay resultados
+            resolve([]);  // Devuelve una lista vacía si no hay coincidencias
+        });
+    });
+};
+
+exports.updateUser = async (id, user, pass) => {
+    const query = `
+        UPDATE USUARIO
+        SET nombre_usuario =$1, pass = $2            
+        WHERE id_usuario = $3;
+    `;
+    const values = [user, pass, id];
+    try {
+        const result = await conexion.query(query, values);
+        return result;
+    } catch (err) {
+        throw new Error('Error en la base de datos');
+    }
+};
+
+exports.getPass = (id) => {
+    return new Promise((resolve, reject) => {
+        const sql = `SELECT pass FROM USUARIO WHERE id_usuario = $1`;
+        conexion.query(sql, [id], (err, resultados) => {
+            if (err) return reject({ status: 500, message: 'Error al obtener al administrar' });
+            if (resultados && resultados.rows.length > 0) return resolve(resultados.rows); // Devuelve las filas si hay resultados
+            resolve([]);  // Devuelve una lista vacía si no hay coincidencias
+        });
+    });
+};

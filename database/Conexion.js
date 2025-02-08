@@ -91,29 +91,32 @@ const initializeDefaultUser = async () => {
     const defaultPassword = "admin";
 
     try {
-        // Verificar si el usuario ya existe
-        const userResult = await conexion.query("SELECT * FROM usuario WHERE nombre_usuario = $1", [defaultUsername]);
+        // Obtener el id del rol 'super_admin' (asumiendo que ya existe)
+        const roleResult = await conexion.query("SELECT id_rol FROM rol WHERE tipo_rol = 'super_admin'");
+        const roleId = roleResult.rows[0]?.id_rol;
+
+        if (!roleId) {
+            console.error("Error: No se encontró el rol 'super_admin'. Verifica que se haya creado correctamente.");
+            return;
+        }
+
+        // Verificar si ya existe un usuario con el rol 'super_admin'
+        const userResult = await conexion.query("SELECT * FROM usuario WHERE id_rol = $1", [roleId]);
 
         if (userResult.rows.length > 0) {
-            console.log(`Usuario por defecto ya existe: ${defaultUsername}`);
+            console.log("Ya existe un usuario con el rol 'super_admin', no se creará uno nuevo.");
             return;
         }
 
         // Encriptar la contraseña
-        const saltRounds = 10;
+        const saltRounds = 8;
         const hashedPassword = await bcrypt.hash(defaultPassword, saltRounds);
-
-        // Asignar el rol de admin
-        const roleResult = await conexion.query("SELECT id_rol FROM rol WHERE tipo_rol = 'super_admin'");
-        const roleId = roleResult.rows[0].id_rol;
-
 
         // Crear el usuario por defecto
         await conexion.query(
             "INSERT INTO usuario (nombre_usuario, pass, id_rol) VALUES ($1, $2, $3)",
             [defaultUsername, hashedPassword, roleId]
         );
-
         console.log(`Usuario por defecto creado: ${defaultUsername}`);
     } catch (error) {
         console.error("Error al inicializar el usuario por defecto:", error.message);

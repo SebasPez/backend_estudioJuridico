@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, getAll, deleteUser, updatePass } = require("../controllers/UserController.js");
+const { register, getAll, deleteUser, updatePass, getUser, updateUser } = require("../controllers/UserController.js");
 const { authMiddleware } = require("../middleware/authMiddleware.js");
 const { existsAdmin } = require("../middleware/existsAdmin.js");
 
@@ -260,5 +260,6 @@ router.get('/user', authMiddleware, getAll);
 router.delete('/user/:id_usuario', authMiddleware, deleteUser);
 router.put("/user/:id/:pass", authMiddleware, updatePass);
 
-
+router.get("/user/:rol", authMiddleware, getUser);
+router.put("/user/:id", authMiddleware, existsAdmin, updateUser);
 module.exports = router;
