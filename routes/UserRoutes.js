@@ -5,6 +5,7 @@ const router = express.Router();
 const { register, getAll, deleteUser, updatePass, getUser, updateUser } = require("../controllers/UserController.js");
 const { authMiddleware } = require("../middleware/authMiddleware.js");
 const { existsAdmin } = require("../middleware/existsAdmin.js");
+const { CheckAvailableUser } = require("../middleware/CheckAvailableUser.js");
 
 // DUCUMENTACIÓN SWAGGER
 
@@ -261,5 +262,5 @@ router.delete('/user/:id_usuario', authMiddleware, deleteUser);
 router.put("/user/:id/:pass", authMiddleware, updatePass);
 
 router.get("/user/:rol", authMiddleware, getUser);
-router.put("/user/:id", authMiddleware, existsAdmin, updateUser);
+router.put("/user/:id", authMiddleware, CheckAvailableUser, updateUser);
 module.exports = router;
