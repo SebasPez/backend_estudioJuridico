@@ -31,6 +31,10 @@ const conexion = new Pool({
     ssl: false
 });
 
+console.log("🧪 Configuración de conexión:", {
+  ssl: conexion.options?.ssl ?? 'no definido'
+});
+
 /**
  * Inicializa los roles por defecto en la base de datos si no existen.
  * 
