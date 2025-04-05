@@ -1,8 +1,11 @@
 "use strict";
+
+const dontev = require('dotenv');
+dontev.config({ path: '.env' });
+
 require('./database/Conexion');
 const express = require('express');
 const cookie = require('cookie-parser');
-const dontev = require('dotenv');
 const cors = require('cors');
 const { swaggerUi, swaggerSpec } = require('./swaggerConfig');
 
@@ -11,11 +14,6 @@ const socketIo = require('socket.io'); // Importar socket.io
 const { isObject } = require('util');
 
 const app = express();
-
-// Cargamos las variables de entorno
-dontev.config({
-    path: '.env'
-});
 
 // Usamos las cookies
 app.use(cookie());
