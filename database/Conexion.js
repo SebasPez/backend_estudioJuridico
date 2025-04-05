@@ -22,6 +22,19 @@ const bcrypt = require('bcrypt');
  *   ssl: process.env.MODO === 'produccion' // Utiliza SSL si el entorno es 'produccion'
  * });
  */
+
+console.log('Entorno:', {
+    DB_HOST: process.env.DB_HOST,
+    DB_NAME: process.env.DB_NAME,
+    DB_USER: process.env.DB_USER,
+    DB_PORT: process.env.DB_PORT,
+    DB_PASSWORD: process.env.DB_PASSWORD ? '***' : undefined,
+    MODO: process.env.MODO,
+    SSL: process.env.MODO === 'produccion'
+        ? { rejectUnauthorized: false }
+        : false
+});
+
 const conexion = new Pool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
