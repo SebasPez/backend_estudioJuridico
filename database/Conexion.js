@@ -28,7 +28,7 @@ const conexion = new Pool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    ssl: false
+    ssl: { rejectUnauthorized: false }
 });
 
 console.log("🔍 Conectando a la base con config:", {
