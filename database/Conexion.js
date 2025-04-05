@@ -31,10 +31,11 @@ const conexion = new Pool({
     ssl: false
 });
 
-console.log("🧪 Configuración de conexión:", {
-  ssl: conexion.options?.ssl ?? 'no definido'
+console.log("🔍 Conectando a la base con config:", {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  ssl: 'false for sure' // hardcodeado
 });
-
 /**
  * Inicializa los roles por defecto en la base de datos si no existen.
  * 
